@@ -1,54 +1,56 @@
-# TrustLens - Beta-Version
+# 🔐 TrustLens - Beta Version
 
-# 🔍 TrustLens — Online Fraud & Fake Review Detection System
+## 🔍 Online Fraud & Fake Review Detection System
 
-TrustLens is a full-stack web application designed to detect and mitigate online fraud and fake reviews using AI/ML, secure database management, and blockchain technology for data integrity.
+**TrustLens** is a full-stack AI-powered platform designed to combat **fake reviews** and **fraudulent financial transactions** using a combination of **NLP models**, **LightGBM classifiers**, **secure database management**, and **blockchain logging** for transparency and traceability.
 
 ---
 
 ## ⚙️ Tech Stack
 
-| Layer           | Technology                                         |
-|----------------|----------------------------------------------------|
-| Frontend        | **Next.js**, **Tailwind CSS**, **TypeScript**     |
-| Backend         | **Node.js**, **API Routes (Next.js)**             |
-| Database        | **Prisma ORM**, **PostgreSQL / MySQL**            |
-| Blockchain      | **Smart Contracts (Ethereum)**, **web3.js / ethers** |
-| ML Integration  | **Fake Review Detection API (Python, BERT/SVM)**  |
-| Hosting         | **Vercel**, **PlanetScale / Supabase**            |
+| Layer           | Technology                                           |
+|----------------|------------------------------------------------------|
+| Frontend        | Next.js, Tailwind CSS, TypeScript                   |
+| Backend         | Node.js, Next.js API Routes                         |
+| Database        | Prisma ORM, PostgreSQL / MySQL                      |
+| Blockchain      | Smart Contracts (Ethereum), web3.js / ethers        |
+| ML Integration  | Python APIs: BERT/SVM for reviews, LightGBM for fraud |
+| Hosting         | Vercel (Frontend), Streamlit (ML Dashboard), Supabase / PlanetScale |
 
 ---
 
-## 🗂️ Web App Folder Structure
+## 🛠️ Core Features
 
-### 📁 `app/`
-Handles routing and core application views such as:
-- `/dashboard`: Displays fraud statistics
-- `/submit-review`: Fake review submission
-- `/admin`: Admin fraud control panel
+### 🧠 Fake Review Detection (NLP)
+- Classifies reviews using transformer or SVM models.
+- Flags suspicious reviews and logs their metadata hash on Ethereum blockchain.
 
-### 📁 `components/`
-Reusable UI modules:
-- `ReviewCard`, `AlertBadge`, `Navbar`, `BlockchainPopup`, etc.
+### 💸 Transaction Fraud Detection (ML)
+- Predicts fraudulent financial transactions from engineered features using a LightGBM classifier.
+- Based on IEEE-CIS Kaggle dataset.
 
-### 📁 `hooks/`
-Custom hooks for:
-- `useReviewValidation()` – Calls ML API to classify reviews
-- `useBlockchainLogger()` – Logs hash to smart contract
-- `useAuth()` – Handles session and authentication logic
+### 🔗 Blockchain Logging
+- Logs review hashes for immutable proof of fraud detection using `web3.js`.
 
-### 📁 `lib/`
-Utility layer containing:
-- `mlClient.ts`: Preprocesses and sends data to ML API
-- `blockchain.ts`: Ethereum hash generation and writing
-- `utils.ts`: String, token, or input handlers
+### 🛡️ Admin Panel & Dashboard
+- Visual dashboard for users/admins to view fraud stats, take action, and monitor trends.
 
-### 📁 `prisma/`
-Includes:
-- `schema.prisma`: Database models
-- `migrations/`: Prisma DB migrations
+---
 
-**Example Schema:**
+## 🗂️ Web App Structure
+
+```
+trustlens/
+├── app/                 # Routing and page views
+├── components/          # UI modules (ReviewCard, Navbar, etc.)
+├── hooks/               # Custom logic for ML, blockchain, auth
+├── lib/                 # ML API calls, blockchain utils, helpers
+├── prisma/              # Database schema and migrations
+├── public/              # Static files and assets
+├── styles/              # Tailwind-based styling
+```
+
+### 📄 Example Prisma Schema
 ```prisma
 model Review {
   id         String   @id @default(uuid())
@@ -59,47 +61,122 @@ model Review {
 }
 ```
 
-### 📁 `public/`
-Assets:
-- Logos
-- Model JSON info
-- Static banners
+---
 
-### 📁 `styles/`
-Global and component styles powered by Tailwind CSS.
+## 🤖 AI/ML Architecture
+
+### 🔍 Review Classification
+- API endpoint receives review input.
+- Uses BERT/SVM/LSTM model to return `isFake: true/false`.
+- Logs flagged metadata hash on Ethereum blockchain.
+
+### 📦 Fraud Detection (IEEE-CIS Dataset)
+- **Dataset**: [IEEE Fraud Detection (Kaggle)](https://www.kaggle.com/competitions/ieee-fraud-detection)
+- Combines `train_transaction.csv` and `train_identity.csv` on `TransactionID`.
+
+### 🎯 Target Variable
+| Column    | Description                     |
+|-----------|---------------------------------|
+| `isFraud` | 1 = fraud, 0 = legitimate        |
 
 ---
 
-## 🔗 Blockchain Integration
+## 🧪 Feature Engineering
 
-Smart contract records a **hash of review metadata** (e.g. review ID, timestamp, isFake flag). This ensures tamper-proof evidence for each flagged review. Implemented via:
-- `lib/blockchain.ts`
-- `hooks/useBlockchainLogger.ts`
+### 💳 Transaction Features
+- `TransactionAmt`, `ProductCD`, engineered decimal-based stats
+- `_amount_qcut10`, `amount_fraction`, `amount_decimal_len`
 
----
+### 🕒 Time Features
+- Derived from `TransactionDT`: `weekday`, `hour`, `hour_bucket`, `is_weekend`
+- `hour_density`: behavioral modeling
 
-## 🤖 AI/ML Integration
+### ⏱️ Rolling & Temporal Gaps
+- `days_since_prev_txn`, `txn_gap_same_card`, `rolling_txn_count_short_term`
 
-TrustLens uses a fake review detection model (e.g. BERT/SVM/LSTM) running on a separate API service. Flow:
-1. User submits a review
-2. Frontend calls ML API → returns `isFake` boolean
-3. If fake, logs to database and blockchain
+### 🔐 Identity & Card Info
+- `card_id`, `card_type`, `addr1`, `DeviceInfo`, `M4`
+- Engineered: `match_status`, `card_id_issuer`, frequency counts
 
----
-
-## 🛠 Features
-
-- 🧠 **Fake Review Detection** using NLP models
-- 🔗 **Blockchain Logging** to preserve trust
-- 🧾 **Admin Panel** to manage flagged reviews
-- 📊 **User Dashboard** with fraud insights
-- 🧩 **Reusable Hooks** for ML + blockchain
-- 🔐 **Authentication & Middleware** for secure route access
+### 📧 Email & Behavior
+- `P_emaildomain`, `device_browser_combo_count`
+- `shared_device_count`, `recent_txn_count`, `device_usage_frequency`
 
 ---
 
-## 🚀 Deployment
+## 💡 LightGBM Model Setup
 
-- Hosted on **Vercel**: [`https://trust-lens-seven.vercel.app`](https://trust-lens-seven.vercel.app)
-- Streamlit ML dashboard: [`Streamlit App`](https://mainpy-9pspmk3ecdfxyabxg3dgwz.streamlit.app)
+```python
+from lightgbm import LGBMClassifier
 
+model = LGBMClassifier(
+    boosting_type='gbdt',
+    objective='binary',
+    metric='auc',
+    num_leaves=256,
+    learning_rate=0.01,
+    feature_fraction=0.7,
+    bagging_fraction=0.7,
+    bagging_freq=5,
+    max_depth=-1,
+    n_estimators=10000,
+    early_stopping_rounds=100
+)
+```
+
+---
+
+## 🔗 Blockchain Implementation
+
+- Ethereum smart contract logs metadata hash of flagged reviews.
+- Prevents tampering and ensures transparency.
+- Integration via:
+  - `lib/blockchain.ts`
+  - `hooks/useBlockchainLogger.ts`
+
+---
+
+## 🔐 Authentication & Security
+
+- Auth flow via custom `useAuth` hook
+- Middleware protection for `/admin` and `/dashboard` routes
+
+---
+
+## 🌐 Deployment
+
+| Module     | Platform | Link |
+|------------|----------|------|
+| Web App    | Vercel   | [TrustLens Web App](https://trust-lens-seven.vercel.app) |
+| ML Backend | Streamlit | [ML Dashboard](https://mainpy-9pspmk3ecdfxyabxg3dgwz.streamlit.app) |
+
+---
+
+## 📌 Folder Highlights
+
+- `hooks/useReviewValidation.ts` – Sends review to NLP API
+- `hooks/useBlockchainLogger.ts` – Hashes and records review to blockchain
+- `lib/mlClient.ts` – Bridges frontend with ML model
+- `lib/utils.ts` – General preprocessing helpers
+
+---
+
+## 🧩 Future Improvements
+
+- 🎯 Ensemble modeling (BERT + SVM for reviews)
+- 🛡️ On-chain moderation for flagged reviews
+- 📊 Real-time graph fraud monitoring
+- 📱 Mobile app integration for reporting scams
+- 🧠 Model explanations using SHAP for fraud insights
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please fork the repo, open a PR, or raise an issue.
+
+---
+
+## 📜 License
+
+MIT License © 2025 TrustLens Team
