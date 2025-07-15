@@ -1,0 +1,201 @@
+{
+	"compiler": {
+		"version": "0.8.30+commit.73712a01"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "actionType",
+						"type": "string"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "attestedBy",
+						"type": "address"
+					}
+				],
+				"name": "NewAttestation",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "actionType",
+						"type": "string"
+					}
+				],
+				"name": "addAttestation",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "getAttestations",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "actionType",
+								"type": "string"
+							},
+							{
+								"internalType": "address",
+								"name": "attestedBy",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "timestamp",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct TrustLens.Attestation[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "userAttestations",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "actionType",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "attestedBy",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"addAttestation(address,string)": {
+					"details": "This is the primary \"WRITE\" function. It can only be called by the contract owner.",
+					"params": {
+						"actionType": "A string describing the action, e.g., \"positive_review\".",
+						"user": "The address of the user who performed the positive action."
+					}
+				},
+				"getAttestations(address)": {
+					"details": "This is the primary \"READ\" function. It is free for anyone to call.",
+					"params": {
+						"user": "The address of the user to query."
+					},
+					"returns": {
+						"_0": "An array of all Attestation structs for that user."
+					}
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"addAttestation(address,string)": {
+					"notice": "Adds a new trust attestation for a user."
+				},
+				"getAttestations(address)": {
+					"notice": "Retrieves all attestations for a specific user."
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/Trustlens.sol": "TrustLens"
+		},
+		"evmVersion": "prague",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/Trustlens.sol": {
+			"keccak256": "0x342eaa9cb9e0d7e17ccf9d95deb0593a89109b5ecae8f6908e6db398ac39fb47",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://f6a13490d98e5c2cf4213f755dea275012780d9bb9cbf27ff46d011ed53a6a06",
+				"dweb:/ipfs/QmdgPq9A9zyzv5cvVbpV2KJAa1SxeahbRezUSQHQ1tzLtp"
+			]
+		}
+	},
+	"version": 1
+}
